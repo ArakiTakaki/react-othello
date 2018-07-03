@@ -1,7 +1,6 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import PropTypes from 'prop-types';
-import { R } from '../../R/Const'
 import Piece from '../atoms/OthelloPiece'
 
 let styles = {

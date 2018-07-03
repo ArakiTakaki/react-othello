@@ -5,13 +5,13 @@ import { R } from '../../R/Const'
 
 const styles = {
   black: {
-    background: "#000",
+    background: "#222",
     width: 50,
     height: 50,
     borderRadius: "50%",
   },
   white: {
-    background: "#eee",
+    background: "#ddd",
     width: 50,
     height: 50,
     borderRadius: "50%",
