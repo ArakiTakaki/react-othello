@@ -4,47 +4,60 @@ import PropTypes from 'prop-types';
 import Piece from '../atoms/OthelloPiece'
 
 let styles = {
+  table:{
+    display: "flex",
+    flexDirection:"column",
+    width:"100vw",
+    height:"100vw",
+    maxHeight:"600px",
+    maxWidth:"600px",
+    background:"#373C38",
 
-  game_bord:{
-    background:"#3F7955",
-    border:"solid 4px #373C38",
-    padding:10,
+  },
+  record: {
+    display: "flex",
+    flexGrow:1,
+  },
+  cel: {
+    padding:"2%",
+    flexGrow:1,
+    background: "#3F7955",
+    margin:1,
   }
 }
 
 function Panel(props) {
   const { classes, bord, onClick } = props
   let table = []
-  for (let i in bord){
+  for (let i in bord) {
     let piece = []
     for (let j in bord[i]) {
       piece.push(
-        <td
-          key={j} 
-          className={classes.game_bord}>
+        <div
+          className={classes.cel}>
           <Piece
+            key={j}
             x={j}
             y={i}
             onClick={onClick}
-            behavior={bord[i][j]}/>
-        </td>
+            behavior={bord[i][j]} />
+        </div>
+
       )
     }
     table.push(
-      <tr
-        key={i}>
+      <div
+        key={i}
+        className={classes.record}>
         {piece}
-      </tr>
+      </div>
     )
   }
 
   return (
-    <table className={classes.bord}>
-      <caption>白の手番です</caption>
-      <tbody>
-        {table}
-      </tbody>
-    </table>
+    <div className={classes.table}>
+      {table}
+    </div>
   )
 }
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 //components
-import Test from './core/Test'
+import Index from './core/containers/templates/Index'
 //components
 
-ReactDOM.render(<Test />, document.getElementById('root'));
+ReactDOM.render(<Index/>, document.getElementById('root'));

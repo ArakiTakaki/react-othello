@@ -6,20 +6,20 @@ import { R } from '../../R/Const'
 const styles = {
   black: {
     background: "#222",
-    width: 50,
-    height: 50,
+    width: "100%",
+    height: "100%",
     borderRadius: "50%",
   },
   white: {
     background: "#ddd",
-    width: 50,
-    height: 50,
+    width: "100%",
+    height: "100%",
     borderRadius: "50%",
   },
   null: {
     background: "#fff0",
-    width: 50,
-    height: 50,
+    width: "100%",
+    height: "100%",
     cursor:"pointer",
   },
 }
