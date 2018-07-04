@@ -15,7 +15,6 @@ const styles = {
 
 
 class Index extends React.Component {
-
   render() {
     const { classes } = this.props
     return (

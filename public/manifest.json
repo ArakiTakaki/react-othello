@@ -1,8 +1,8 @@
 {
-  "name": "SmartCart",
-  "short_name": "SCart",
+  "name": "Othello",
+  "short_name": "オセロ",
   "lang": "ja",
-  "display": "minimal-ui",
+  "display": "standalone",
   "icons": [
     {
       "src": "/favicon.ico",

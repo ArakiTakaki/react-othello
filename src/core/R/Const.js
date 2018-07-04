@@ -1,5 +1,4 @@
-
-export const R = {
+export const R ={
   "initialize_game": [
     [0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0],

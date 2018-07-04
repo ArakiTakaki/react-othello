@@ -16,19 +16,44 @@ export default class OthelloEngine {
       [0, -1],
       [1, -1]
     ]
+    this.black = 2
+    this.white = 2
     this.tmp = []
+    this.conclusion = false
+    this.step = 0
   }
 
   getBord() {
     return this.bord
   }
+
   getPlayer() {
     return this.player
   }
 
+  getWhite(){
+    return this.white
+  }
+
+  getBlack(){
+    return this.black
+  }
+
+  getConclusion(){
+    return this.conclusion
+  }
+
+  getStep(){
+    return this.step
+  }
+
   Initialize() {
     this.player = R.game_props.black
-    this.bord = R.initialize_game
+    this.bord = JSON.parse(JSON.stringify(R.initialize_game))
+    this.black = 2
+    this.white = 2
+    this.step = 0
+    this.conclusion = false
   }
 
   ChangePiece(y, x) {
@@ -52,12 +77,25 @@ export default class OthelloEngine {
       }
     }
 
+    //プレイヤーのチェンジを行う
     if (change) {
+      this.step ++
       this.bord[y][x] = this.player
       this.ChangePlayer()
-      console.log(this.bord)
+
+      this._findAll();
+      // 置き場所がない積んでる状態ならプレイヤーを切り替える
+      // const result = this.FIndAll()
+      // if(result !== 0){
+      //   this.ChangePlayer()
+      // }
+      if ( this.bord.length * this.bord[0].length === this.black + this.white ){
+        this.conclusion = true
+      }
     }
+    return false;
   }
+
 
   ChangePlayer() {
     if (this.player === R.game_props.black) {
@@ -67,6 +105,26 @@ export default class OthelloEngine {
     }
   }
 
+  _findAll() {
+    this.black = 0;
+    this.white = 0;
+    for (var i in this.bord) {
+      for (var j in this.bord) {
+        if (this.bord[i][j] === R.game_props.black) {
+          this.black++;
+        }
+        if (this.bord[i][j] === R.game_props.white)
+          this.white++;
+      }
+    }
+  }
+
+  /**
+   * _write(x, y, map)
+   * @param {int} y y軸の位置データ
+   * @param {int} x x軸の位置データ
+   * @param {int[]} map 方向データ [y, x]
+   */
   _write(y, x, map) {
     let x_p = x + map[1]
     let y_p = y + map[0]
@@ -82,9 +140,14 @@ export default class OthelloEngine {
     }
   }
 
+  /**
+   * _dirSerch(y, x) 全方向検索
+   * @param y Y軸の位置データ
+   * @param x X軸の位置データ
+   * @return 方向のデータ [y, x]
+  */
   _dirSerch(y, x) {
     let list = []
-    //方向の探索
     for (let map of this.mapping) {
       try {
         var loc = this.bord[y + map[0]][x + map[1]]
@@ -97,7 +160,12 @@ export default class OthelloEngine {
     return list
   }
 
-  //先に黒があるかどうか探索1
+  /**
+   * 
+   * @param {int} y y軸の位置データ
+   * @param {int} x x軸の位置データ
+   * @param {int[2]} map 方向データ [y,x]
+   */
   _straight(y, x, map) {
     let x_p = x + map[1]
     let y_p = y + map[0]
@@ -112,8 +180,6 @@ export default class OthelloEngine {
         return false
       if (y_p < 0 || x_p < 0)
         return false
-      console.log(y_p)
-      console.log(x_p)
       loc = this.bord[y_p][x_p]
     }
     return false
