@@ -21,6 +21,7 @@ export default class OthelloEngine {
     this.tmp = []
     this.conclusion = false
     this.step = 0
+    this.isPeasNotPut = false
   }
 
   getBord() {
@@ -31,19 +32,19 @@ export default class OthelloEngine {
     return this.player
   }
 
-  getWhite(){
+  getWhite() {
     return this.white
   }
 
-  getBlack(){
+  getBlack() {
     return this.black
   }
 
-  getConclusion(){
+  getConclusion() {
     return this.conclusion
   }
 
-  getStep(){
+  getStep() {
     return this.step
   }
 
@@ -77,21 +78,42 @@ export default class OthelloEngine {
       }
     }
 
-    //プレイヤーのチェンジを行う
     if (change) {
-      this.step ++
+      this.step++
       this.bord[y][x] = this.player
       this.ChangePlayer()
 
-      this._findAll();
-      // 置き場所がない積んでる状態ならプレイヤーを切り替える
-      // const result = this.FIndAll()
-      // if(result !== 0){
-      //   this.ChangePlayer()
-      // }
-      if ( this.bord.length * this.bord[0].length === this.black + this.white ){
-        this.conclusion = true
+
+      this.isPeasNotPut = true;
+      this._findAll(
+        function (param) {
+          const { x, y, self } = param
+          if (self.bord[x][y] === R.game_props.null) {
+            if (self._dirSerch(x, y).length > 0) {
+              console.log("ok")
+              self.isPeasNotPut = false;
+            }
+          }
+        }
+      );
+      this.black = 0;
+      this.white = 0;
+      this._findAll(
+        function (param) {
+          const { x, y, self } = param
+          if(self.bord[x][y] === R.game_props.black){
+            self.black ++;
+          }
+          if(self.bord[x][y] === R.game_props.white){
+            self.white ++;
+          }
+        }
+      );
+      if (this.isPeasNotPut) {
+        this.ChangePlayer()
       }
+
+
     }
     return false;
   }
@@ -105,16 +127,16 @@ export default class OthelloEngine {
     }
   }
 
-  _findAll() {
+  _findAll(callback) {
     this.black = 0;
     this.white = 0;
     for (var i in this.bord) {
       for (var j in this.bord) {
-        if (this.bord[i][j] === R.game_props.black) {
-          this.black++;
-        }
-        if (this.bord[i][j] === R.game_props.white)
-          this.white++;
+        callback({
+          self: this,
+          x: j,
+          y: i
+        })
       }
     }
   }
@@ -147,17 +169,26 @@ export default class OthelloEngine {
    * @return 方向のデータ [y, x]
   */
   _dirSerch(y, x) {
+    x = Number(x)
+    y = Number(y)
     let list = []
     for (let map of this.mapping) {
-      try {
-        var loc = this.bord[y + map[0]][x + map[1]]
-        if (loc !== this.player && loc !== R.game_props.null) {
-          list.push(map)
-        }
-      } catch (e) {
+      var loc = this._mapCombart(y + map[0], x + map[1])
+      if (loc !== this.player && loc !== R.game_props.null && loc !== -1) {
+        list.push(map)
       }
     }
     return list
+  }
+
+  _mapCombart(y, x) {
+    x = Number(x)
+    y = Number(y)
+    if (y === -1 || x === -1 || x >= this.bord.length || y >= this.bord.length) {
+      return -1
+    }
+    var loc = this.bord[y][x]
+    return loc
   }
 
   /**
