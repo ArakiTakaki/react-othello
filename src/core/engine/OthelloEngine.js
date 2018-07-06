@@ -78,12 +78,7 @@ export default class OthelloEngine {
 
     if (change) {
       this.step++
-      this.bord[y][x] = this.player
-      this.ChangePlayer()
 
-      // おけるかどうか
-      this.isPeasNotPut = true;
-      this._findAll( this.isPeasPut);
       this.black = 0;
       this.white = 0;
       this._findAll(
@@ -97,6 +92,16 @@ export default class OthelloEngine {
           }
         }
       );
+
+
+      this.bord[y][x] = this.player
+      this.ChangePlayer()
+
+      
+      // おけるかどうか
+      this.isPeasNotPut = true;
+      this._findAll( this.isPeasPut);
+
       if (this.isPeasNotPut) {
         this.ChangePlayer()
       }
@@ -134,8 +139,6 @@ export default class OthelloEngine {
   }
 
   _findAll(callback) {
-    this.black = 0;
-    this.white = 0;
     for (var i in this.bord) {
       for (var j in this.bord) {
         callback({
