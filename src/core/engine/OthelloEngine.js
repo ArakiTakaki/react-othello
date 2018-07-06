@@ -69,13 +69,11 @@ export default class OthelloEngine {
       return
     }
 
-    //方向の先を検索
+    //方向先を書き換え
+    this.bord[y][x] = this.player;
     for (let value of dirs) {
-      let swt = this._straight(y, x, value)
-      if (swt) {
-        this._write(y, x, value)
-        change = true;
-      }
+      this._write(y, x, value)
+      change=true;
     }
 
     if (change) {
@@ -83,19 +81,9 @@ export default class OthelloEngine {
       this.bord[y][x] = this.player
       this.ChangePlayer()
 
-
+      // おけるかどうか
       this.isPeasNotPut = true;
-      this._findAll(
-        function (param) {
-          const { x, y, self } = param
-          if (self.bord[x][y] === R.game_props.null) {
-            if (self._dirSerch(x, y).length > 0) {
-              console.log("ok")
-              self.isPeasNotPut = false;
-            }
-          }
-        }
-      );
+      this._findAll( this.isPeasPut);
       this.black = 0;
       this.white = 0;
       this._findAll(
@@ -113,9 +101,27 @@ export default class OthelloEngine {
         this.ChangePlayer()
       }
 
+      //両者置き場所がなくなったら試合終了
+      this.isPeasNotPut = true;
+      this._findAll( this.isPeasPut);
+      if (this.isPeasNotPut){
+        this.conclusion = true
+      }
+
+
 
     }
     return false;
+  }
+
+  isPeasPut(param){
+    const { x, y, self } = param
+    if (self.bord[x][y] === R.game_props.null) {
+      if (self._dirSerch(x, y).length > 0) {
+        console.log("ok")
+        self.isPeasNotPut = false;
+      }
+    }
   }
 
 
@@ -173,15 +179,25 @@ export default class OthelloEngine {
     y = Number(y)
     let list = []
     for (let map of this.mapping) {
-      var loc = this._mapCombart(y + map[0], x + map[1])
-      if (loc !== this.player && loc !== R.game_props.null && loc !== -1) {
-        list.push(map)
+      var loc = this._outOfIndex(y + map[0], x + map[1])
+      if ( loc === -1 ){
+        continue;
       }
+      if (loc === this.player) {
+        continue;
+      }
+      if (loc === R.game_props.null ){
+        continue;
+      }
+      if(!this._isStraight(y,x,map)){
+        continue;
+      }
+      list.push(map)
     }
     return list
   }
 
-  _mapCombart(y, x) {
+  _outOfIndex(y, x) {
     x = Number(x)
     y = Number(y)
     if (y === -1 || x === -1 || x >= this.bord.length || y >= this.bord.length) {
@@ -197,7 +213,7 @@ export default class OthelloEngine {
    * @param {int} x x軸の位置データ
    * @param {int[2]} map 方向データ [y,x]
    */
-  _straight(y, x, map) {
+  _isStraight(y, x, map) {
     let x_p = x + map[1]
     let y_p = y + map[0]
     let loc = this.bord[y_p][x_p]
